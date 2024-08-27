@@ -1,0 +1,55 @@
+\documentclass[12pt]{article}
+\usepackage[left=.5in, right=.5in, top=.5in, bottom=.5in]{geometry}
+\usepackage[parfill]{parskip}
+\usepackage{amsmath, amssymb}
+\pagenumbering{gobble}
+\setlength\parindent{0pt}
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\I}{\mathbb{I}}
+\newcommand{\p}{\mathbb{P}}
+\newcommand{\V}{\text{Var}}
+
+\begin{document}
+
+\begin{center}
+{\Large STA347H1 - Assignment 2}
+\end{center}
+
+\textbf{5.1:} $\E e^{\lambda S} = e^{\lambda}\p(S = 1) + e^{-\lambda}\p(S = -1) = \frac{1}{2}(e^{\lambda} + e^{-\lambda}) = \frac{1}{2}(1 + \lambda + \frac{\lambda^2}{2!} + \frac{\lambda^3}{3!} + \ldots + 1 - \lambda + \frac{\lambda^2}{2!} - \frac{\lambda^3}{3!} + \ldots) = \frac{1}{2}(1 + 1 + \frac{\lambda^2}{2!} + \frac{\lambda^2}{2!} + \frac{\lambda^4}{4!} + \frac{\lambda^4}{4!} + \ldots) = \Sigma_{n=0}^\infty \frac{\lambda^{2n}}{(2n)!} \leq \Sigma_{n=0}^\infty \frac{\lambda^{2n}}{2^n n!} = \Sigma_{n=0}^\infty \frac{(\lambda^2/2)^n}{n!} = e^{\lambda^2/2}$ since $(2n)! = \Pi_{i=1}^n (2i) \Pi_{i=1}^n (2i - 1) = (2^n n!)\Pi_{i=1}^n (2i - 1) \geq 2^n n!$ for $n \geq 0$. Notice that $\E(Z_n) = \Sigma_{i=1}^n \E(S) = 0$, so by Hoeffding's inequality, $\p(Z \geq t) = \p(Z - \E Z \geq t) \leq \exp(\frac{-2t^2}{\Sigma_{i=1}^n (1 - (-1))^2}) = \exp(\frac{-t^2}{2n})$ for $t > 0$. Finally, $\p(Z \geq 0) = \frac{1}{2} \leq e^0 = 1$, so the relation also holds for $t = 0$.
+
+Revised: Chernoff's inequality can also be used since $\p(Z \geq t) = \p(Z - \E Z \geq t) \leq \inf_{\lambda > 0} M_{Z - \E Z}(\lambda)e^{-\lambda t} = \inf_{\lambda > 0} M_Z(\lambda)e^{-\lambda t} = \inf_{\lambda > 0} \Pi_{i=1}^n M_{S_i}(\lambda)e^{-\lambda t} = \inf_{\lambda > 0} e^{\lambda^2 n/2} e^{-\lambda t} = \exp(\frac{t^2 n}{2n^2} - \frac{t^2}{n}) = \exp(\frac{-t^2}{2n})$ for $t \geq 0$, where the minimum of $\exp(\frac{\lambda^2 n}{2} - \lambda t)$ is achieved at $\lambda = \frac{t}{n}$.
+
+\textbf{5.7:}
+\begin{itemize}
+    \item $p \geq 0$: $\E|X + Y|^p \leq \E|2\max(X,Y)|^p = 2^p \E\max(|X|^p,|Y|^p) \leq 2^p \E(|X|^p + |Y|^p) = 2^p(\E|X|^p + \E|Y|^p)$.
+    \item $p = 0$: $\E|X + Y|^0 = 1 \leq \E|X|^0 + \E|Y|^0 = 2$.
+    \item $p \in (0,1)$: $|X + Y|^p = |X + Y|^{1-(1-p)} = |X + Y||X + Y|^{-(1-p)} \leq |X||X + Y|^{-(1-p)} + |Y||X + Y|^{-(1-p)}$ by the triangle inequality $\leq |X||X|^{-(1-p)} + |Y||Y|^{-(1-p)} = |X|^p + |Y|^p$ since $|X + Y| \geq X$ and $|X + Y| \geq Y$. Alternatively, since $|\frac{X}{X+Y}|, |\frac{Y}{X+Y}| \in [0,1]$, $|\frac{X}{X+Y}|^p + |\frac{Y}{X+Y}|^p \geq |\frac{X}{X+Y}| + |\frac{Y}{X+Y}| \geq |\frac{X}{X+Y} + \frac{Y}{X+Y}|$ by the triangle inequality $= 1 \implies |X|^p + |Y|^p \geq |X + Y|^p$. In both cases, taking the expectation yields the result.
+
+    Revised: The above is not true if either $X < 0$ or $Y < 0$. Instead, notice that $(\frac{|X|}{|X|+|Y|})^p + (\frac{|Y|}{|X|+|Y|})^p \geq \frac{|X}{|X|+|Y|} + \frac{|Y|}{|X|+|Y|} = 1$.
+    \item $p = 1$: $\E|X + Y| \leq \E(|X| + |Y|)$ by the triangle inequality $= 2^0 (\E|X| + \E|Y|)$.
+    \item $p > 1$: Since $|x|^p$ is convex, $|\frac{1}{2}X + \frac{1}{2}Y|^p \leq \frac{1}{2}|X|^p + \frac{1}{2}|Y|^p \implies |X + Y|^p \leq \frac{2^p}{2}(|X|^p + |Y|^p) \implies \E(|X + Y|^p) \leq \E(2^{p-1}(|X|^p + |Y|^p)) = 2^{p-1}(\E|X|^p + \E|Y|^p)$.
+\end{itemize}
+
+\textbf{5.10:} $\forall \varepsilon > 0, \p(|X_n - \E X_n| > \varepsilon) \leq \p(|X_n - \E X_n| \geq \varepsilon) \leq \frac{\V(X_n)}{\varepsilon^2}$ by Chebyshev's inequality $= \frac{1}{\varepsilon^2 \sqrt{n}} \to 0$ as $n \to \infty$. Alternatively, $\E|X_n - \E X_n|^2 = \V(X_n) = \frac{1}{\sqrt{n}} \to 0$ as $n \to \infty$, so $X_n \overset{L^2}{\to} \E X_n$. Both cases imply $X_n \overset{p}{\to} m$.
+
+\textbf{6.1:} $\E(\frac{1}{n}S_n - \E (\frac{1}{n}S_n))^2 = \V(\frac{1}{n}S_n) = \frac{1}{n^2}\V(S_n) = \frac{1}{n^2}\Sigma_{i=1}^n \V(X_i)$ since the $X_i$'s are uncorrelated $= \frac{1}{n}\Sigma_{i=1}^n \frac{\V(X_i)}{n} \leq \frac{1}{n}\Sigma_{i=1}^n \frac{\V(X_i)}{i} \leq \frac{1}{n}\Sigma_{i=1}^\infty \frac{\V(X_i)}{i} \to 0$ as $n \to \infty$ since $\frac{\V(X_i)}{i} \to 0$ as $i \to \infty \implies \Sigma_{i=1}^\infty \frac{\V(X_i)}{i} < \infty$.
+
+Revised: For the last step, $\frac{\V(X_i)}{i} \to 0$ as $i \to \infty \nRightarrow \Sigma_{i=1}^\infty \frac{\V(X_i)}{i} < \infty$ since $\frac{1}{n} \to 0$ but $\Sigma_{n=1}^\infty \frac{1}{n} = \infty$. Instead, use the Cesàro mean theorem: $a_i \to a \implies \frac{1}{n}\Sigma_{i=1}^n a_i \to a$.
+
+\textbf{6.2:} Define $\mathcal{X} = \{(-1)^k k\}_{k=2}^\infty$ and notice that $C > 0$. First, $\E|X_1| = \Sigma_{x\in\mathcal{X}} |x|\p(X_1 = x) = \Sigma_{k=2}^\infty k\p(X_1 = (-1)^k k) = \Sigma_{k=2}^\infty \frac{C}{k\log k} \geq \int_2^\infty \frac{1}{y\log y}dy = \log|\log \infty| - \log|\log 2| = \infty$ since $\Sigma_{k=x}^\infty f(k) \geq \int_x^\infty f(y)dy$ for a positive and decreasing function $f$. Next, $x\p(|X_1| > x) = x\p(\cup_{k=x+1}^\infty \{X_1 = k\}) \leq x\Sigma_{k=x+1}^\infty \p(X_1 = k) = x\Sigma_{k=x+1}^\infty \frac{C}{k^2 \log k} \leq \frac{x}{\log x} \Sigma_{k=x+1}^\infty \frac{C}{k^2} \leq \frac{Cx}{\log x} \int_x^\infty \frac{1}{y^2}dy = \frac{Cx}{\log x} (0 + \frac{1}{x}) = \frac{C}{\log x} \to 0$ as $x \to \infty$. Thus, $\frac{1}{n}S_n - \mu_n \overset{p}{\to} 0$ by the WLLN $\implies \frac{1}{n}S_n \overset{p}{\to} \mu$ since $\frac{(-1)^k}{k^2 \log k}$ is an alternating series converging to 0 and $\mu_n = \E(X_1 \I(|X_1| \leq n)) = \Sigma_{k=2}^n \frac{(-1)^k C}{k^2 \log k} \to$ some $\mu$ as $n \to \infty$.
+
+\textbf{6.7:} Since $\Sigma_{n=1}^\infty \p(X_n \leq \log n) = \Sigma_{n=1}^\infty (1 - \p(X_n > \log n)) = \Sigma_{n=1}^\infty (1 - e^{-\log n}) = \Sigma_{n=1}^\infty (1 - \frac{1}{n}) = \infty$ and $\{X_n \leq \log n\}_n$ are independent, $\p(X_n \leq \log n$ i.o.$) = 1$ by Borel-Cantelli. Similarly, since $\Sigma_{n=1}^\infty \p(X_n \geq \log n) \geq \Sigma_{n=1}^\infty \p(X_n > \log n) = \Sigma_{n=1}^\infty e^{-\log n} = \Sigma_{n=1}^\infty \frac{1}{n} = \infty$ and $\{X_n \leq \log n\}_n$ are independent, $\p(X_n \geq \log n$ i.o.$) = 1$ by Borel-Cantelli. Thus, $\p(X_n = \log n$ i.o.$) = 1 \implies \limsup \limits_{n\to\infty} \frac{X_n}{\log n} = 1$ a.s.
+
+\textbf{7.2:} The characteristic function of $X_n$ is $\varphi_{X_n}(t) = e^{-(\sigma_n t)^2/2}$. By Theorem 7.2.9, $X_n \overset{D}{\to} X \implies \varphi_{X_n}(t) \to \varphi_X(t)$ for all $t \in \mathbb{R}$. Notice that $\varphi_{X_n}(\sqrt{2}) \to \varphi_X(\sqrt{2}) \implies -\log \varphi_{X_n}(\sqrt{2}) = \sigma_n \to \sigma$ for some $\sigma \in [0,\infty]$ since $\varphi_{X_n}(t) \in (0,1] \implies -\log \varphi_{X_n}(t) \in [0,\infty)$. Next, $\sigma = \infty \implies \varphi_{X_n}(t) \to e^{-\infty} = 0$ for all $t \neq 0$, but since $\varphi_{X_n}(0) = 1$, this implies $\varphi_{X_n}$ is discontinuous at $t = 0$. This yields a contradiction, so $\sigma \neq \infty$.
+
+\textbf{7.8:} Let $X_n \sim \mathcal{N}(0,1)$ and $X \sim \mathcal{N}(0,1)$. $X_n \overset{D}{\to} X$ and $X_n \overset{D}{\to} -X$, but $X_n + X_n \not\overset{D}{\to} X - X = 0$.
+
+\textbf{7.11:} $\varphi_{S_n/n}(t) = \Pi_{i=1}^n \varphi_{X_i}(\frac{t}{n})$ by Proposition 7.2.5 $= (\varphi(\frac{t}{n}))^n$ and $\varphi_a(t) = \E(e^{iat}) = e^{iat}$. Notice that $\varphi'(0) = ia \implies \lim \limits_{n\to\infty} \frac{\varphi(t/n)-\varphi(0)}{t/n} = ia \implies \lim \limits_{n\to\infty} n(\varphi(\frac{t}{n}) - 1) = iat \implies (\varphi(\frac{t}{n}))^n = [1 + \frac{n(\varphi(t/n) - 1)}{n}]^n \to \exp[n(\varphi(\frac{t}{n}) - 1)] \to e^{iat}$ as $n \to \infty$ since $(1 + \frac{x}{n})^n \to e^x$ as $n \to \infty$. Thus, $\varphi_{S_n/n}(t) \to \varphi_a(t)$ for all $t \in \mathbb{R}$, so $\frac{S_n}{n} \overset{D}{\to} a$ by Theorem 7.2.9 $\implies \frac{S_n}{n} \overset{p}{\to} a$.
+
+\textbf{10:} Notice that $j^2 = \frac{2j(j+1)}{2} - j = 2\Sigma_{k=1}^j k - \Sigma_{k=1}^j 1 = \Sigma_{k=1}^j (2k - 1)$. Thus, $\E X^2 = \Sigma_{j=0}^\infty j^2 \p(X = j) = \Sigma_{j=1}^\infty j^2 \p(X = j) = \Sigma_{j=1}^\infty \Sigma_{k=1}^j (2k - 1)\p(X = j) = \Sigma_{k=1}^\infty \Sigma_{j=k}^\infty (2k - 1)\p(X = j) = \Sigma_{k=1}^\infty (2k - 1) \Sigma_{j=k}^\infty \p(X = j) = \Sigma_{k=1}^\infty (2k - 1)\p(X \geq k)$.
+
+Revised: Define $i = X(w)\in \mathbb{N}$ and $X_n = \Sigma_{k=1}^n (2k-1)\I(X \geq k)$. $X_n \leq X_{n+1}$ and $\forall n \geq i$, $X_n = \Sigma_{k=1}^i (2k-1) = i^2 = X^2$. By the DCT, $\E X_n = \Sigma_{k=1}^n (2k-1)\p(X \geq k) \uparrow \E X^2$.
+
+\textbf{11:} $F_X(x) = \int_0^x 2ydy = x^2$ for $x \in (0,1)$. $F_{Z_n}(z) = 1 - \p(\sqrt{n}\min[X_1,\ldots,X_n] > z) = 1 - \p(\cap_{i=1}^n \{X_i > z / \sqrt{n}\}) = 1 - \Pi_{i=1}^n \p(X_i > z / \sqrt{n})$ since the $X_i$'s are independent $= 1 - [\p(X_i > z / \sqrt{n})]^n = 1 - (1 - F_X(z / \sqrt{n}))^n = 1 - (1 - \frac{z^2}{n})^n$ for $z \in (0,\sqrt{n})$. As $n \to \infty$, $1 - (1 - \frac{z^2}{n})^n \to 1 - e^{-z^2}$ for $z > 0$, which is the CDF of some $Z^2 \sim$ Exponential(1) or $Z \sim$ Rayleigh($\frac{1}{\sqrt{2}})$. The PDF of $Z$ is $f_Z(z) = \frac{d}{dz} (1 - e^{-z^2}) = 2ze^{-z^2}$ for $z > 0$.
+
+\end{document}
