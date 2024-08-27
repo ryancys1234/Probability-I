@@ -1,3 +1,3 @@
-# Probability-I
+# Probability
 
-This repository contains assignments from the course Probability I offered by the Department of Statistical Sciences.
+This repository contains assignments from the course Probability offered by the Department of Statistical Sciences.
